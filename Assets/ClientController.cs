@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ClientController : MonoBehaviour {
     public static ClientController Instance;
 
-    string uri = "http://localhost/SQLNetworking/";
+    string uri = "http://laienoper.de/SQLNetworking/";//"http://localhost/SQLNetworking/";
 
     [HideInInspector]
     public PlayerData playerData;
@@ -24,7 +24,10 @@ public class ClientController : MonoBehaviour {
 
     public Transform playerContainer;
 
-    int currentUserId;
+    [HideInInspector]
+    public int currentUserId = -1;
+    [HideInInspector]
+    public bool online = false;
 
     public void Awake()
     {
@@ -87,11 +90,12 @@ public class ClientController : MonoBehaviour {
                 Debug.Log("Password Correct user found - signing in.. User ID: " + userId);
 
                 yield return SwitchOnlineState(userId, 1);
+                PlayerSyncManager.Instance.PlacePlayers();
                 GameManager.Instance.EnterGame(playerData.entries[userId - 1]);
+                online = true;
+                PlayerSyncManager.Instance.StartSync();
                 loginCanvas.gameObject.SetActive(false);
                 logoutCanvas.gameObject.SetActive(true);
-                PlaceOtherPlayers();
-
                 break;
 
             case LoginType.createAccount:
@@ -117,6 +121,7 @@ public class ClientController : MonoBehaviour {
         loginCanvas.gameObject.SetActive(true);
         yield return SwitchOnlineState(currentUserId, 0);
         Debug.Log("logging out id " + currentUserId);
+        online = false;
         GameManager.Instance.BackToLoginScreen();
     }
     public void StartUpdateCoroutine(){
@@ -124,19 +129,7 @@ public class ClientController : MonoBehaviour {
             StopCoroutine(updateRoutine);
         updateRoutine = StartCoroutine(UpdatePlayer());
     }
-    void PlaceOtherPlayers(){
-        foreach (PlayerData.PlayerDataEntry entry in playerData.entries)
-        {
-            if (entry.isOnline == 1)
-            {
-                if(entry.id != currentUserId){
-                    GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                    cylinder.transform.position = entry.positionX * Vector3.right + entry.positionZ * Vector3.forward + Vector3.up;
-                    cylinder.transform.parent = playerContainer;
-                }
-            }
-        }
-    }
+
     //IEnumerator updatePlayerPositions(){
     //    foreach(PlayerData.PlayerDataEntry entry in playerData.entries){
     //        if(entry.isOnline == 1)

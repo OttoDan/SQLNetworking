@@ -60,15 +60,19 @@ public class GameManager : MonoBehaviour {
 
     void InsertPlayer(PlayerData.PlayerDataEntry data){
         if (player != null)
-            Destroy(player.gameObject);
+            Destroy(player);
 
-        Transform playerT = Instantiate(playerPrefab, playerContainer).transform;
+        player = PlayerSyncManager.Instance.PlaceClientPlayer(data);
 
-        playerT.position = data.positionX * Vector3.right + data.positionZ * Vector3.forward;
+        //Transform playerT = Instantiate(playerPrefab, playerContainer).transform;
 
-        playerT.name = "ID: " + data.id + "Name: " + data.username;
+        //playerT.position = data.positionX * Vector3.right + data.positionZ * Vector3.forward;
 
-        player = playerT.gameObject.GetComponent<PlayerController>();
+        //playerT.name = "ID: " + data.id + "Name: " + data.username;
+
+        //player = PlayerSyncManager.Instance.transform.GetChild(data.id-1).gameObject.AddComponent<PlayerController>();
+
+
 
     }
 }
