@@ -20,7 +20,7 @@ public class ClientController : MonoBehaviour {
     public Canvas logoutCanvas;
 
     Coroutine updateRoutine;
-    float updateFrequency = 1f;
+    public float updateFrequency = 0.5f;
 
     public Transform playerContainer;
 

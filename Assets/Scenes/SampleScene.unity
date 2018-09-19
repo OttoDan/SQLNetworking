@@ -410,6 +410,7 @@ MonoBehaviour:
   passwordInput: {fileID: 738561856}
   loginCanvas: {fileID: 1640411504}
   logoutCanvas: {fileID: 1261289606}
+  updateFrequency: 1
   playerContainer: {fileID: 2027699176}
   currentUserId: -1
   online: 0
