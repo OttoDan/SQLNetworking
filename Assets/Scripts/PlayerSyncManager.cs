@@ -30,11 +30,20 @@ public class PlayerSyncManager : MonoBehaviour {
                 //newPlayer.AddComponent<PlayerController>();
 
             }
+            else{
+
+                Transform newOfflinePlayer = new GameObject("ID: " + entry.id + "Name: " + entry.username).transform;
+                newOfflinePlayer.parent = transform;
+            }
         }
     }
 
     public PlayerController PlaceClientPlayer(PlayerData.PlayerDataEntry entry){
+        //Remove Dummy
+        Destroy(transform.GetChild(entry.id - 1).gameObject);
+
         GameObject newPlayer = Instantiate(playerPrefab, transform);
+        newPlayer.transform.SetSiblingIndex(entry.id - 1);
         newPlayer.transform.position = entry.positionX * Vector3.right + entry.positionZ * Vector3.forward + Vector3.up;
         newPlayer.transform.name = "ID: " + entry.id + "Name: " + entry.username;
         //if (entry.id == ClientController.Instance.currentUserId)
@@ -57,6 +66,7 @@ public class PlayerSyncManager : MonoBehaviour {
             {
                 if(child != GameManager.Instance.player.transform)
                 {
+                    //TODO: ignore offline players
                     PlayerData.PlayerDataEntry entry = ClientController.Instance.playerData.entries[child.GetSiblingIndex()];
                     child.position = Vector3.right * entry.positionX + Vector3.forward * entry.positionZ;
                     Debug.Log("updated position of " + entry.username);

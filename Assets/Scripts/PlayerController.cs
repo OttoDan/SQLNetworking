@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
     public float speed = 4f;
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour {
         Camera.main.transform.position = transform.position - transform.forward * 4 + Vector3.up * 2.5f;
         Camera.main.transform.parent = transform;
         ClientController.Instance.StartUpdateCoroutine();
+        GetComponentInChildren<Text>().text = transform.name;
     }
     private void Update()
     {
